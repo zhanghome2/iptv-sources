@@ -13,6 +13,26 @@ export interface IREADMESource {
 export type TREADMESources = IREADMESource[]
 export type TREADMEEPGSources = TEPGSource[]
 
+interface IREADMEMirrorSite {
+    protocol: "http" | "https"
+    url: string
+    frequence: string
+    idc: string
+    provider: string
+}
+
+type TREADMEMirrorSitesMatrix = IREADMEMirrorSite[]
+
+const matrix: TREADMEMirrorSitesMatrix = [
+    {
+        protocol: "https",
+        url: "https://iptv.b2og.com",
+        frequence: "per 2h",
+        idc: "腾讯云",
+        provider: "[GrandDuke1106](https://github.com/GrandDuke1106)",
+    },
+]
+
 export const updateChannelList = (
     name: string,
     f_name: string,
@@ -37,12 +57,12 @@ export const updateChannelList = (
             "<!-- list_title_here -->",
             `# List for **${name}**${
                 rollback ? "(Rollback)" : ""
-            }\n\n> M3U: <https://m3u.ibert.me/${f_name}.m3u>, TXT: <https://m3u.ibert.me/txt/${f_name}.txt>`
+            }\n\n> M3U: [${f_name}.m3u](/${f_name}.m3u), TXT: [${f_name}.txt](/txt/${f_name}.txt)`
         )
         .replace(
             "<!-- channels_here -->",
             `${channels
-                .map(
+                ?.map(
                     (c, idx) =>
                         `| ${idx + 1} | ${c[0].replace("|", "")} | [${c[0]
                             .replace("|", "")
@@ -72,22 +92,31 @@ export const updateReadme = (
 
     const after = readme
         .replace(
+            "<!-- matrix_here -->",
+            matrix
+                ?.map(
+                    (m) =>
+                        `| ${m.protocol} | <${m.url}> | ${m.frequence} | ${m.idc} | ${m.provider} |`
+                )
+                .join("\n")
+        )
+        .replace(
             "<!-- channels_here -->",
             `${sources
-                .map(
+                ?.map(
                     (s, idx) =>
-                        `| ${s.name} | <https://m3u.ibert.me/${
+                        `| ${s.name} | [${s.f_name}.m3u](/${
                             s.f_name
-                        }.m3u> <br> <https://m3u.ibert.me/txt/${
+                        }.m3u) <br> [${s.f_name}.txt](/txt/${
                             s.f_name
-                        }.txt> | [List for ${
-                            s.name
-                        }](https://m3u.ibert.me/list/${s.f_name}.list) | ${
-                            sources_res[idx][1] === undefined
+                        }.txt) | [List for ${s.name}](/list/${
+                            s.f_name
+                        }.list) | ${
+                            sources_res?.[idx]?.[1] === undefined
                                 ? "update failed"
                                 : sources_res[idx][1]
                         } | ${
-                            sources_res[idx][0] === "rollback" ? "✅" : "-"
+                            sources_res?.[idx]?.[0] === "rollback" ? "✅" : "-"
                         } |`
                 )
                 .join("\n")}`
@@ -95,13 +124,13 @@ export const updateReadme = (
         .replace(
             "<!-- epgs_here -->",
             `${epgs
-                .map(
+                ?.map(
                     (e, idx) =>
-                        `| ${e.name} | <https://m3u.ibert.me/epg/${
+                        `| ${e.name} | [${e.f_name}.xml](/epg/${
                             e.f_name
-                        }.xml> | ${
-                            !!epgs_res[idx][0]
-                                ? epgs_res[idx][0] === "rollback"
+                        }.xml) | ${
+                            !!epgs_res?.[idx]?.[0]
+                                ? epgs_res?.[idx]?.[0] === "rollback"
                                     ? "✅"
                                     : "-"
                                 : "update failed"

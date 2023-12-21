@@ -2,6 +2,8 @@
 
 Autoupdate iptv sources
 
+GitHub: [HerbertHe/iptv-sources](https://github.com/HerbertHe/iptv-sources)
+
 Join discord: [![Discord](https://discord.badge.ibert.me/api/server/betxHcsTqa)](https://discord.gg/betxHcsTqa)
 
 Sources are from:
@@ -16,6 +18,15 @@ EPG Sources are from:
 
 - [fanmingming/live](https://github.com/fanmingming/live)
 - [112114.xyz](https://diyp1.112114.xyz)
+- [epg.51zmt.top:8000](http://epg.51zmt.top:8000/)
+
+## Matrix
+
+You can also use the services provided by Mirror Sites Matrix!
+
+| HTTP Protocol | URL | Auto-update frequence | IDC | Provider |
+| ------------- | --- | --------------------- | --- | -------- |
+<!-- matrix_here -->
 
 ## Channel
 

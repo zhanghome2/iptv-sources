@@ -8,15 +8,17 @@ import MarkdownIt from "markdown-it"
 
 const app = new Koa()
 const router = new Router()
+const md = new MarkdownIt({ html: true })
 
-app.use(Static("./m3u"))
+const markdownBody = (md_p: string, back_p: string) => {
+    let markdown: string = ""
+    if (!fs.existsSync(md_p)) {
+        markdown = fs.readFileSync(back_p).toString()
+    } else {
+        markdown = fs.readFileSync(md_p).toString()
+    }
 
-router.get("/", (ctx) => {
-    const markdown = fs
-        .readFileSync(path.resolve("m3u", "README.md"))
-        .toString()
-    const md = new MarkdownIt({ html: true })
-    ctx.body = `
+    return `
     <html lang="en">
     <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,6 +42,23 @@ router.get("/", (ctx) => {
     </body>
     </html>
     `
+}
+
+app.use(Static("./m3u"))
+
+router.get("/", (ctx) => {
+    const readme_p = path.resolve("m3u", "README.md")
+    const back_readme_p = path.resolve("back", "README.md")
+
+    ctx.body = markdownBody(readme_p, back_readme_p)
+})
+
+router.get("/list/:channel", (ctx) => {
+    const list = ctx.params.channel
+    const list_readme_p = path.resolve("m3u", "list", `${list}.md`)
+    const back_list_readme_p = path.resolve("back", "list", `${list}.md`)
+
+    ctx.body = markdownBody(list_readme_p, back_list_readme_p)
 })
 
 app.use(router.routes())
